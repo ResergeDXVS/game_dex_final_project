@@ -45,7 +45,7 @@ function App() {
 						element={<Check/>}
 					/>
 					<Route
-						path="/products/"
+						path="/products/:category"
 						element={<ProductNavigate/>}
 					/>
 				</Routes>

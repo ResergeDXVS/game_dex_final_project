@@ -39,7 +39,7 @@ describe("Product component",()=>{
     }
 
     it("should render the product information",()=>{
-        const productAux:Products = {id: 1,image: "url",name: "Example",release_date: "2026-02-01",description: "prueba",price: 1432.94,promotion: 10,company_id:9,category_id:2};
+        const productAux:Products = {id: 1,image_url: "url",name: "Example",release_date: "2026-02-01",description: "prueba",price: 1432.94,promotion: 10,company_id:9,category_id:2};
         renderWithProviders(productAux);
         const price = screen.getByText("$1432.94");
         expect(price).toBeInTheDocument();
@@ -49,7 +49,7 @@ describe("Product component",()=>{
 
     it("should navigate to the product details",()=>{
         mockedUseNavigate.mockReturnValue(mockNavigate);
-        const productAux:Products = {id: 13,image: "url",name: "Example",release_date: "2026-02-01",description: "prueba",price: 1432.94,promotion: 10,company_id:9,category_id:2};
+        const productAux:Products = {id: 13,image_url: "url",name: "Example",release_date: "2026-02-01",description: "prueba",price: 1432.94,promotion: 10,company_id:9,category_id:2};
         renderWithProviders(productAux);
         const container = screen.getByTestId("product_container");
         fireEvent.click(container);
@@ -64,7 +64,7 @@ describe("Product component",()=>{
             },
         }));
         mockedUseNavigate.mockReturnValue(mockNavigate);
-        const productAux:Products = {id: 13,image: "url",name: "Example",release_date: "2026-02-01",description: "prueba",price: 1432.94,promotion: 10,company_id:9,category_id:2};
+        const productAux:Products = {id: 13,image_url: "url",name: "Example",release_date: "2026-02-01",description: "prueba",price: 1432.94,promotion: 10,company_id:9,category_id:2};
         renderWithProviders(productAux);
         const button = screen.getByRole("button",{name:/Guardar al carrito/i});
         fireEvent.click(button);
@@ -96,7 +96,7 @@ describe("Product component",()=>{
         }));
         
         mockedUseNavigate.mockReturnValue(mockNavigate);
-        const productAux:Products = {id: 13,image: "url",name: "Example",release_date: "2026-02-01",description: "prueba",price: 1432.94,promotion: 10,company_id:9,category_id:2};
+        const productAux:Products = {id: 13,image_url: "url",name: "Example",release_date: "2026-02-01",description: "prueba",price: 1432.94,promotion: 10,company_id:9,category_id:2};
         renderWithProviders(productAux);
         const button = screen.getByRole("button",{name:/Guardar al carrito/i});
         fireEvent.click(button);

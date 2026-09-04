@@ -41,8 +41,8 @@ describe("Product Navigate component",()=>{
     it("should render the product list of the catalog selected",()=>{
         
         const products:Products[] = [
-            {id: 1,image: "url",name: "Nioh 3",release_date: "2026-02-01",description: "prueba",price: 2169.99,promotion: 15,company_id:9,category_id:2,},
-            {id: 2,image: "url",name: "Prueba",release_date: "2026-02-01",description: "prueba",price: 2169.99,promotion: 15,company_id:9,category_id:2,},
+            {id: 1,image_url: "url",name: "Nioh 3",release_date: "2026-02-01",description: "prueba",price: 2169.99,promotion: 15,company_id:9,category_id:2,},
+            {id: 2,image_url: "url",name: "Prueba",release_date: "2026-02-01",description: "prueba",price: 2169.99,promotion: 15,company_id:9,category_id:2,},
         ]
         renderWithProviders(products);
         const name = screen.getByText("Prueba");

@@ -27,6 +27,7 @@ const Product = ({product}:ProductProps) =>{
     const checkDetails = (id:number) => {
         navigate(`/product/${id}`);
     }
+    console.log(product)
     return (
         <Fragment>
             <ProductData>
@@ -37,7 +38,7 @@ const Product = ({product}:ProductProps) =>{
                     onClick={()=>checkDetails(product.id)}>
                     <ProductImagen>
                         <img
-                            src={product.image}
+                            src={product.image_url}
                             alt={`Imagen del producto ${product.name}`}/>
                     </ProductImagen>
                     <ProductTitle>{product.name}</ProductTitle>

@@ -21,27 +21,27 @@ const Header = () => {
             </HeaderLogo>
             <HeaderOptions>
                 <Link 
-                    to="/products?type=1"
+                    to="/products/consoles"
                     aria-label="Mostrar todos las consolas disponibles">
                         Consolas
                 </Link>
                 <Link 
-                    to="/products?type=2"
+                    to="/products/games"
                     aria-label="Mostrar todos los juegos disponibles">
                         Juegos
                 </Link>
                 <Link 
-                    to="/products?type=3"
+                    to="/products/controls"
                     aria-label="Mostrar todos los controles disponibles">
                         Controles
                 </Link>
                 <Link 
-                    to="/products?type=4"
+                    to="/products/passes"
                     aria-label="Mostrar todos los pases de consolas disponibles">
                         Pases
                 </Link>
                 <Link 
-                    to="/products?type=5"
+                    to="/products/accessories"
                     aria-label="Mostrar todos los accesorios disponibles">
                         Accesorios
                 </Link>

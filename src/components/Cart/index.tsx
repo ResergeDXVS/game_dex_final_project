@@ -50,7 +50,7 @@ const Cart = () => {
                                 <CartProduct key={product.id}>
                                     <CartProductImage
                                     alt={`Imagen del producto ${product.name}`}
-                                    src={product.image}/>
+                                    src={product.image_url}/>
                                     <CartProductName>
                                         {product.name}
                                     </CartProductName>

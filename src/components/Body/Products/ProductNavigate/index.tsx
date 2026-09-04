@@ -1,16 +1,29 @@
-import React, { Fragment } from "react"
-import { useSearchParams } from "react-router-dom"
+import React, { Fragment, useEffect } from "react"
+import { useLocation, useParams } from "react-router-dom"
 import { useAppSelector } from "../../../../redux/store/store";
 import Footer from "../../../Footer";
-import { Products } from "../../../../redux/slices/productSlice";
+import { getProductListCategory, Products } from "../../../../redux/slices/productSlice";
 import ProductList from "../ProductList";
 import { ProductNavigateTitle, ProductNavigateContainer, ProductNavigateErrorContainer, ProductNavigateError } from "./styles";
 import Header from "../../../Header";
+import { useDispatch } from "react-redux";
+import { ASYNC_STATUS } from "../../../../constants/asyncState";
+
+function useQuery() {
+    return new URLSearchParams(useLocation().search);
+}
+
 const ProductNavigate = () => {
-    const [searchParams] = useSearchParams();
-    const products = useAppSelector(state=>state.product.products);
-    const catalog = useAppSelector(state=>state.data.categories);
-    const tag = searchParams.get("type");
+    const {list, status} = useAppSelector(state=>state.product);
+    const { category } = useParams<{category:string}>();
+    const dispatch = useDispatch();
+
+    useEffect(()=>{
+        if (category) {
+            dispatch(getProductListCategory(category) as any);
+        }
+    },[dispatch, category]);
+
     const validProducts = (tag:string | undefined,list:Products[]) => (
         <ProductNavigateContainer>
             <ProductNavigateTitle>Catálogo de {tag}</ProductNavigateTitle>
@@ -25,33 +38,35 @@ const ProductNavigate = () => {
         </ProductNavigateErrorContainer>
     );
 
+    const charging = () => (
+        <ProductNavigateErrorContainer aria-labelledby="productNavigateModalError">
+            <ProductNavigateError
+                id="productNavigateModalError">CARGANDO...</ProductNavigateError>
+        </ProductNavigateErrorContainer>
+    );
+
     const render = () => {
-        if(tag){
-            const valid = catalog.some(p=> p.id === Number(tag));
-            if (valid){
-                const tag_name = catalog.find(p=>p.id === Number(tag))?.category;
-                const productList = products.filter(product=>product.category_id===Number(tag));
-                if(productList.length===0){
-                    return errorListView(`No se encontraron productos disponibles de la categoría ${tag_name}.`);
-                }else{
-                    return validProducts(tag_name,productList);
-                }
-                
-            }else{
-                return errorListView("No se encontraron productos de la categoria seleccionada.");
-            }
+        if(status === ASYNC_STATUS.PENDING){
+            return charging();
+        }else if(status === ASYNC_STATUS.REJECTED){
+            return errorListView(`Error en la carga de la página`);
         }else{
-            return errorListView("Error en la busqueda de productos.");
+            
+            if(category){
+                return validProducts(category,list);
+            }else{
+                return errorListView("Error en la busqueda de productos.");
+            }
+
         }
+        
         
     }
 
     return(
         <Fragment>
             <Header/>
-            {
-                render()
-            }
+            {render()}
             <Footer/>
         </Fragment>
     );
