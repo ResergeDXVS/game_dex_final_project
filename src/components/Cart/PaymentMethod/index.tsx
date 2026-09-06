@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { CartContainer } from "../styles";
 import { PaymentMethodAddButton, PaymentMethodDecoration, PaymentMethodDiv, PaymentMethodForm, PaymentMethodInput, PaymentMethodLabel, PaymentMethodPayment, PaymentMethodTitle } from "./styles";
 import { useNavigate } from "react-router-dom";
@@ -8,6 +8,8 @@ import CreditForm from "./CreditForm";
 import Alert from "../../Alert";
 import { addAddress, addMethod } from "../../../redux/slices/cartSlice";
 import AddressForm from "./AddressForm";
+import { GetAddresses } from "../../../redux/slices/addresssSlice";
+import { GetPaymentMethod } from "../../../redux/slices/paymentMethodSlice";
 
 
 export type FormMethodState = {
@@ -22,9 +24,20 @@ export type AddressMethodState = {
     external_number:string,
     postal:string,
     suburb:string,
-    contry:string,
+    country:string,
 }
 
+export type AddressItem = {
+    id: number;
+    address: string;
+    postal: string;
+    country: string;
+};
+
+export type PaymentItem = {
+    id: number;
+    card_number: string;
+};
 
 const PaymentMethod = () =>{
     const [showAlertError, setShowAlertError] = useState(false);
@@ -35,11 +48,9 @@ const PaymentMethod = () =>{
     const [selectedAddress, setSelectedAddress] = useState<number>();
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const payments = useAppSelector(state=>state.payments.payment);
-    const addresses = useAppSelector(state=>state.addresses.address);
+    const payments = useAppSelector((state) => (state.payments.payment ?? [])) as unknown as PaymentItem[];
+    const addresses = useAppSelector((state) => (state.addresses.address ?? [])) as unknown as AddressItem[];
     const actualUser = useAppSelector(state=>state.user.actualUser);
-    const cards = payments.filter(state=>state.user_id === actualUser?.id);
-    const addressUser = addresses.filter(state=>state.user_id === actualUser?.id) ;
 
     const handlePay = () => {
         if (selectedCard && selectedAddress) {
@@ -55,6 +66,14 @@ const PaymentMethod = () =>{
             setShowAlert(true);
         }
     };
+    useEffect(()=>{
+        const storedUser = actualUser;
+        const token = storedUser?.access ?? "";
+        if (token) {
+            dispatch(GetAddresses(token) as any);
+            dispatch(GetPaymentMethod(token) as any);
+        }
+    },[dispatch]);
 
     const MethodView = () => (
         <CartContainer>
@@ -62,7 +81,7 @@ const PaymentMethod = () =>{
                 {/* Dirección de envio */}
                 <PaymentMethodTitle>Asignar Dirección</PaymentMethodTitle>
                 <PaymentMethodForm>
-                    {addressUser && addressUser.map((address)=>(
+                    {addresses && addresses.map((address: AddressItem)=>(
                         <PaymentMethodDiv key={address.id}>
                             <PaymentMethodInput
                                 type="radio"
@@ -72,7 +91,7 @@ const PaymentMethod = () =>{
                                 onChange={(e)=>setSelectedAddress(Number(e.target.id))}
                             />
                             <PaymentMethodLabel htmlFor={`${address.id}`}>
-                                {`Calle: ${address.address}, Codigo Postal: ${address.postal}, País: ${address.contry}`}
+                                {`Calle: ${address.address}, Codigo Postal: ${address.postal}, País: ${address.country}`}
                             </PaymentMethodLabel>
                         </PaymentMethodDiv>
                     )) }
@@ -92,7 +111,7 @@ const PaymentMethod = () =>{
 
                 <PaymentMethodTitle>Asignar Método de pago</PaymentMethodTitle>
                 <PaymentMethodForm>
-                    {cards && cards.map((card)=>(
+                    {payments && payments.map((card:PaymentItem)=>(
                         <PaymentMethodDiv key={card.id}>
                             <PaymentMethodInput
                                 type="radio"
@@ -156,7 +175,7 @@ const PaymentMethod = () =>{
                 action={() => setShowAlertError(false)}
                 visible={showAlertError}/>
             <Alert
-                id="alert_product"
+                id="alert_check"
                 title={
                     !selectedCard ? "Tarjeta no seleccionada" : 
                     !selectedAddress ? "Dirección no seleccionada" : ""

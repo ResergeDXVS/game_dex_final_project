@@ -1,8 +1,9 @@
 import React, { Fragment, useState } from "react";
-import { useAppDispatch } from "../../../../redux/store/store";
+import { useAppDispatch, useAppSelector } from "../../../../redux/store/store";
 import { AddressMethodState } from "..";
 //import { createAddressThunk } from "../../../../redux/slices/addresssSlice";
 import { AddressAddButton, AddressCancel, AddressDiv, AddressFormBase, AdressStructureForm } from "./styles";
+import { GetAddresses, PostAddresses } from "../../../../redux/slices/addresssSlice";
 
 type AddressMethodProps = {
     visible: boolean;
@@ -15,13 +16,14 @@ type AddressMethodProps = {
 const AddressForm = ({ visible,onClose,onAlert }: AddressMethodProps) => {
     
     const dispatch = useAppDispatch();
+    const actualUser = useAppSelector(state=>state.user.actualUser);
     const [form, setForm] = useState<AddressMethodState>({
         address:"",
         internal_number:"",
         external_number:"",
         postal:"",
         suburb:"",
-        contry:"",
+        country:"",
     });
     
 
@@ -32,7 +34,7 @@ const AddressForm = ({ visible,onClose,onAlert }: AddressMethodProps) => {
             external_number:"",
             postal:"",
             suburb:"",
-            contry:"",
+            country:"",
         })
         onClose();
     }
@@ -59,15 +61,26 @@ const AddressForm = ({ visible,onClose,onAlert }: AddressMethodProps) => {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        // const result = await dispatch(createAddressThunk(form));
-        // if (createAddressThunk.fulfilled.match(result)) {
-        //     onClose();
-        // } else if (createAddressThunk.rejected.match(result)) {
-        //     onAlert();
-        // }
-
+        const storedUser = actualUser;
+        const token = storedUser?.access ?? "";
+        const address = {
+            address:form.address,
+            internal_number:form.internal_number,
+            external_number:form.external_number,
+            postal:form.postal,
+            suburb:form.suburb,
+            country:form.country,
+        };
+        const result = await dispatch(PostAddresses(address as any));
+        dispatch(GetAddresses(token) as any);
+        console.log(result);
+        if ((PostAddresses.fulfilled as any).match(result)) {
+            onClose();
+        } else if ((PostAddresses.rejected as any).match(result)) {
+            onAlert();
+        }
     };
-
+    
 
 
     return (
@@ -156,13 +169,13 @@ const AddressForm = ({ visible,onClose,onAlert }: AddressMethodProps) => {
                     </AddressDiv>
                     <AddressDiv
                         $grid_name="pais"
-                        $show_data={checkData("pais",form.contry)}>
-                        <label htmlFor="contry">Pais</label>
+                        $show_data={checkData("pais",form.country)}>
+                        <label htmlFor="country">Pais</label>
                         <input
-                            id="contry"
-                            name="contry"
+                            id="country"
+                            name="country"
                             type="text"
-                            value={form.contry}
+                            value={form.country}
                             onChange={handleChange}
                             aria-label="Agregar nombre del país"
                         />

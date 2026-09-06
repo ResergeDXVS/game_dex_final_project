@@ -6,3 +6,9 @@ export const GET_COMPANY_LIST = 'product/GetCompanies';
 
 export const LOGIN_USER = 'accounts/Login';
 export const POST_USER = 'accounts/PostUser';
+
+export const GET_ADDRESSES = 'address/GetAddresses';
+export const POST_ADDRESSES = 'address/PostAddresses';
+
+export const GET_CARDS = 'address/GetCards';
+export const POST_CARDS = 'address/PostCards';

@@ -12,8 +12,16 @@ const Check = () => {
     const address = useAppSelector(state=>state.addresses.address);
     const payments = useAppSelector(state=>state.payments.payment);
     const actualCart = carts[0];
-    const addressSelected = address.find(add=> add.id === actualCart?.address_id);
-    const methodSelected = payments.find(method=>method.id === actualCart?.payment_id);
+    const addressSelected = (address as unknown as Array<{
+        address_id: typeof actualCart extends undefined ? never : string | number;
+        address: string;
+        external_number: string;
+        internal_number: string;
+        postal: string;
+        suburb: string;
+        country: string;
+    }>).find(add => String(add.address_id) === String(actualCart?.address_id));
+    const methodSelected = payments.find((method: unknown) => method === actualCart?.payment_id) as unknown as { card_number: string } | undefined;
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const clearAndReturn = () => {
@@ -58,7 +66,7 @@ const Check = () => {
                 <CheckAddress>Envio de los productos a "
                     {` Calle ${addressSelected?.address}, Número exterior ${addressSelected?.external_number}, `}
                     { addressSelected?.internal_number !== "" && `Numero interior ${addressSelected?.internal_number}, `}
-                    {`C.P. ${addressSelected?.postal}, Colonia ${addressSelected?.suburb}, ${addressSelected?.contry}`} "
+                    {`C.P. ${addressSelected?.postal}, Colonia ${addressSelected?.suburb}, ${addressSelected?.country}`} "
                 </CheckAddress>
                 <CheckMethod>
                     

@@ -1,6 +1,9 @@
 import {  createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { FormMethodState } from "../../components/Cart/PaymentMethod";
 import { User } from "./userSlice";
+import { GET_CARDS, POST_CARDS } from "../../constants/actionTypes";
+import api from "../../api";
+import { ASYNC_STATUS } from "../../constants/asyncState";
 
 
 export type PaymentMethod = {
@@ -17,76 +20,86 @@ export interface PaymentState {
     error: string | null;
 }
 
-export const createPaymentThunk = createAsyncThunk<
-    PaymentMethod,
-    FormMethodState,
-    {
-        state: {
-            payments: PaymentState;
-            user: { actualUser: User | null };
-        };
-        rejectValue: string;
-    }
-    >(
-    "payment/createPaymentThunk",
-    async (form, { getState, rejectWithValue }) => {
 
-        const state = getState();
-        const actualUser = state.user.actualUser;
-
-        if (!actualUser) {
-        return rejectWithValue("No se ha iniciado sesión.");
-        }
-
-        const exist = state.payments.payment.some(
-        (u) =>
-            u.card_number === form.card_number &&
-            u.user_id === actualUser.id
-        );
-
-        if (exist) {
-            return rejectWithValue("La tarjeta ya está registrada por el usuario");
-        }
-
-        const idAux = state.payments.payment.length + 1;
-
-        const newPayment: PaymentMethod = {
-            id: idAux,
-            user_id: actualUser.id,
-            card_number: form.card_number,
-            expiration: form.expiration,
-            cvc: form.cvc,
-        };
-
-        return newPayment;
+export const GetPaymentMethod = createAsyncThunk(
+    GET_CARDS,
+    async (token: string) => {
+        const response = await api.get(`accounts/card/`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        const data = response.data;
+        return Array.isArray(data) ? data : [data];
     }
 );
 
 
-const initialState: PaymentState = {
-    payment: [],
-    status: "idle",
-    error: null,
-};
+export const PostPaymentMethod = createAsyncThunk(
+    POST_CARDS,
+    async (card:PaymentMethod) => {
+        const storedUser = localStorage.getItem("actualUser");
+        const parsedUser = storedUser
+            ? (JSON.parse(storedUser) as User & { access?: string })
+            : null;
+
+        if (!parsedUser) {
+            throw new Error("No se ha iniciado sesión.");
+        }
+
+        const token = parsedUser.access;
+        const response = await api.post(`accounts/card/`, 
+            {
+                account_id: parsedUser.id,
+                card_number: card.card_number,
+                expiration:card.expiration,
+                cvc:card.cvc,
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        return response.data;
+    }
+);
+
 
 const paymentMethodSlice = createSlice({
     name: "paymentMethod",
-    initialState,
+    initialState:{
+        payment: [] as PaymentItem[],
+        status: "idle",
+        error:null as null|string,
+    },
     reducers: {},
     extraReducers: builder => {
         builder
-        .addCase(createPaymentThunk.pending, state => {
-            state.status = "loading";
+        .addCase(GetPaymentMethod.pending, state => {
+            state.status = ASYNC_STATUS.PENDING;
             state.error = null;
         })
-        .addCase(createPaymentThunk.fulfilled, (state, action) => {
-            state.status = "succeeded";
-            state.payment = [...state.payment, action.payload];
+        .addCase(GetPaymentMethod.fulfilled, (state, action) => {
+            state.status = ASYNC_STATUS.FULFILLED;
+            state.payment = action.payload;
         })
-        .addCase(createPaymentThunk.rejected, (state, action) => {
-            state.status = "failed";
-            state.error = action.payload as string;
-        });
+        .addCase(GetPaymentMethod.rejected, (state, action) => {
+            state.status = ASYNC_STATUS.PENDING;
+            state.error = action.error as string;
+        })
+        .addCase(PostPaymentMethod.pending, state => {
+            state.status = ASYNC_STATUS.PENDING;
+            state.error = null;
+        })
+        .addCase(PostPaymentMethod.fulfilled, (state, action) => {
+            state.status = ASYNC_STATUS.FULFILLED;
+            state.payment.push(action.payload);
+        })
+        .addCase(PostPaymentMethod.rejected, (state, action) => {
+            state.status = ASYNC_STATUS.PENDING;
+            state.error = action.error as string;
+        })
     },
     
 });

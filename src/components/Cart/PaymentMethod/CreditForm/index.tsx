@@ -1,8 +1,8 @@
 import React, { Fragment, useState } from "react";
 import { MethodAddButton, MethodCancel, MethodDiv, MethodForm, MethodFormBase } from "./styles";
 import { FormMethodState } from "..";
-import { createPaymentThunk } from "../../../../redux/slices/paymentMethodSlice";
-import { useAppDispatch } from "../../../../redux/store/store";
+import { useAppDispatch, useAppSelector } from "../../../../redux/store/store";
+import { GetPaymentMethod, PostPaymentMethod } from "../../../../redux/slices/paymentMethodSlice";
 
 type PaymentMethodProps = {
     visible: boolean;
@@ -15,6 +15,7 @@ type PaymentMethodProps = {
 const CreditForm = ({ visible,onClose,onAlert }: PaymentMethodProps) => {
     
     const dispatch = useAppDispatch();
+    const actualUser = useAppSelector(state=>state.user.actualUser);
     const [form, setForm] = useState<FormMethodState>({
         card_number: "",
         expiration: "",
@@ -67,13 +68,21 @@ const CreditForm = ({ visible,onClose,onAlert }: PaymentMethodProps) => {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const result = await dispatch(createPaymentThunk(form));
-        if (createPaymentThunk.fulfilled.match(result)) {
+        const storedUser = actualUser;
+        const token = storedUser?.access ?? "";
+        const payment = {
+            card_number: form.card_number,
+            expiration: form.expiration,
+            cvc: form.cvc,
+        };
+        const result = await dispatch(PostPaymentMethod(payment as any));
+        dispatch(GetPaymentMethod(token) as any);
+        console.log(result);
+        if ((PostPaymentMethod.fulfilled as any).match(result)) {
             onClose();
-        } else if (createPaymentThunk.rejected.match(result)) {
+        } else if ((PostPaymentMethod.rejected as any).match(result)) {
             onAlert();
         }
-
     };
 
 

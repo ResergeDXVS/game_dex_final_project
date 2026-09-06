@@ -68,7 +68,7 @@ const UserCreate = () => {
             password: form.password,
         }
         dispatch(postUser(user) as any);
-        navigate("/");
+        //navigate("/");
     };
 
     return (
