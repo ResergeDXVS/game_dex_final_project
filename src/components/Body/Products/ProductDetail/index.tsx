@@ -28,7 +28,7 @@ const ProductDetail = () => {
     const addProduct = (product: Products) => {
         if (!product) return;
         if (user) {
-            dispatch(addCart({ user, product }));
+            dispatch(addCart({ product }));
         } else {
             setShowAlert(true);
         }

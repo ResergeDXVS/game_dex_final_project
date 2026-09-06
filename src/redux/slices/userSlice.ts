@@ -1,9 +1,24 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { FormState } from "../../components/User/UserCreate";
-import { LoginState } from "../../components/User/UserLogin";
+import { LOGIN_USER, POST_USER } from "../../constants/actionTypes";
+import api from "../../api";
+import { ASYNC_STATUS } from "../../constants/asyncState";
 
 export const loginUserText = "actualUser";
 export const usersInfo = "userList";
+
+type LoginInfo = {
+    email: string,
+    password:string
+}
+type UserInfo = {
+    name: string,
+    paternal_surname: string,
+    maternal_surname:string,
+    rfc:string,
+    datebirth:string,
+    email:string,
+    password:string
+}
 
 export type User = {
     id: number;
@@ -16,114 +31,70 @@ export type User = {
     password: string;
 };
 
-export interface UserState {
-    users: User[];
-    actualUser: User | null;
-    status: "idle" | "loading" | "succeeded" | "failed";
-    error: string | null;
-}
+export const loginUser = createAsyncThunk(LOGIN_USER,async(login:LoginInfo)=> {
+    const response = await api.post(`accounts/login/`,{
+        email: login.email,
+        password: login.password,
+    });
+    return response.data;
+});
 
-// Thunk para login
-export const loginUserThunk = createAsyncThunk<User, LoginState, { state: { user: UserState } }>(
-    "users/loginUserThunk",
-    async (credentials, { getState, rejectWithValue }) => {
-        const state = getState();
-        const exist = state.user.users.find(
-        u => u.email === credentials.email && u.password === credentials.password
-        );
-        if (!exist) {
-            return rejectWithValue("Usuario no encontrado");
-        }
-        localStorage.setItem(loginUserText, JSON.stringify(exist));
-        return exist;
-    }
-);
+export const postUser = createAsyncThunk(POST_USER,async (user:UserInfo) => {
+    const response = await api.post(`accounts/user/`,{
+        name: user.name.toUpperCase(),
+        paternal_surname: user.paternal_surname.toUpperCase(),
+        maternal_surname:user.maternal_surname.toUpperCase(),
+        rfc:user.rfc.toUpperCase(),
+        datebirth:user.datebirth,
+        email:user.email,
+        password:user.password,
+    });
+    return response.data;
+});
 
-// Thunk para crear usuario
-export const createUserThunk = createAsyncThunk<User, FormState, { state: { user: UserState } }>(
-    "users/createUserThunk",
-    async (form, { getState, rejectWithValue }) => {
-        const state = getState();
-        const exist = state.user.users.some(u => u.email === form.email);
-
-        if (exist) {
-            return rejectWithValue("El usuario ya existe");
-        }
-
-        const idAux = state.user.users.length + 1;
-        const user: User = {
-            id: idAux,
-            name: form.name.toUpperCase(),
-            paternal_surname: form.paternal_surname.toUpperCase(),
-            maternal_surname: form.maternal_surname
-                ? form.maternal_surname.toUpperCase()
-                : "",
-            rfc: form.rfc.toUpperCase(),
-            datebirth: form.datebirth,
-            email: form.email,
-            password: form.password,
-        };
-
-        const updatedUsers = [...state.user.users, user];
-        localStorage.setItem(usersInfo, JSON.stringify(updatedUsers));
-        localStorage.setItem(loginUserText, JSON.stringify(user));
-        
-        return user;
-    }
-);
-
-// Helper para inicializar la lista de usuarios
-const userListArray = (): User[] => {
-    const users = localStorage.getItem(usersInfo)
-        ? JSON.parse(localStorage.getItem(usersInfo) as string)
-        : [];
-    return users;
-};
-
-const initialState: UserState = {
-    users: userListArray(),
-    actualUser: localStorage.getItem(loginUserText)
-        ? JSON.parse(localStorage.getItem(loginUserText) as string)
-        : null,
-    status: "idle",
-    error: null,
-};
 
 const userSlice = createSlice({
     name: "users",
-    initialState,
+    initialState:{
+        actualUser: localStorage.getItem(loginUserText)
+            ? JSON.parse(localStorage.getItem(loginUserText) as string)
+            : null,
+        status:'idle',
+        error:null as null|string,
+    },
     reducers: {
         closeUser: state => {
-        localStorage.setItem(loginUserText, JSON.stringify(null));
-        state.actualUser = null;
+            localStorage.setItem(loginUserText, JSON.stringify(null));
+            state.actualUser = null;
         },
     },
     extraReducers: builder => {
         builder
-        .addCase(loginUserThunk.pending, state => {
-            state.status = "loading";
+        .addCase(loginUser.pending, state => {
+            state.status = ASYNC_STATUS.PENDING;
             state.error = null;
         })
-        .addCase(loginUserThunk.fulfilled, (state, action) => {
-            state.status = "succeeded";
+        .addCase(loginUser.fulfilled, (state, action) => {
+            state.status = ASYNC_STATUS.FULFILLED;
+            localStorage.setItem(loginUserText, JSON.stringify(action.payload));
             state.actualUser = action.payload;
         })
-        .addCase(loginUserThunk.rejected, (state, action) => {
-            state.status = "failed";
-            state.error = action.payload as string;
+        .addCase(loginUser.rejected, (state, action) => {
+            state.status = ASYNC_STATUS.REJECTED;
+            state.error = action.error.message as string;
         })
-        .addCase(createUserThunk.pending, state => {
-            state.status = "loading";
+        .addCase(postUser.pending, state => {
+            state.status = ASYNC_STATUS.PENDING;
             state.error = null;
         })
-        .addCase(createUserThunk.fulfilled, (state, action) => {
-            state.status = "succeeded";
-            state.users.push(action.payload);
+        .addCase(postUser.fulfilled, (state, action) => {
+            state.status = ASYNC_STATUS.FULFILLED;
+            localStorage.setItem(loginUserText, JSON.stringify(action.payload));
             state.actualUser = action.payload;
         })
-        .addCase(createUserThunk.rejected, (state, action) => {
-            state.status = "failed";
-            state.error = action.payload as string;
+        .addCase(postUser.rejected, (state, action) => {
+            state.status = ASYNC_STATUS.REJECTED;
+            state.error = action.error.message as string;
         });
     },
 });

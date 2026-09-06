@@ -33,7 +33,7 @@ function App() {
 						element={<ProductDetail/>}
 					/>
 					<Route
-						path="/cart/:id"
+						path="/cart/"
 						element={<Cart/>}
 					/>
 					<Route

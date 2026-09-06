@@ -4,3 +4,5 @@ export const GET_PRODUCT_LIST = 'product/GetProductList';
 export const GET_PRODUCT_LIST_CATEGORY = 'product/GetProductListCategory';
 export const GET_COMPANY_LIST = 'product/GetCompanies';
 
+export const LOGIN_USER = 'accounts/Login';
+export const POST_USER = 'accounts/PostUser';

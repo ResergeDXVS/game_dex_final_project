@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from "react";
 import { useAppDispatch } from "../../../../redux/store/store";
 import { AddressMethodState } from "..";
-import { createAddressThunk } from "../../../../redux/slices/addresssSlice";
+//import { createAddressThunk } from "../../../../redux/slices/addresssSlice";
 import { AddressAddButton, AddressCancel, AddressDiv, AddressFormBase, AdressStructureForm } from "./styles";
 
 type AddressMethodProps = {
@@ -59,12 +59,12 @@ const AddressForm = ({ visible,onClose,onAlert }: AddressMethodProps) => {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const result = await dispatch(createAddressThunk(form));
-        if (createAddressThunk.fulfilled.match(result)) {
-            onClose();
-        } else if (createAddressThunk.rejected.match(result)) {
-            onAlert();
-        }
+        // const result = await dispatch(createAddressThunk(form));
+        // if (createAddressThunk.fulfilled.match(result)) {
+        //     onClose();
+        // } else if (createAddressThunk.rejected.match(result)) {
+        //     onAlert();
+        // }
 
     };
 

@@ -56,7 +56,7 @@ const Header = () => {
                     {
                         username===null ? 
                         <i className="fi fi-rs-user"></i> :
-                        <h1 data-testid="user_login">{username?.name.charAt(0)}</h1>
+                        <h1 data-testid="user_login">{username.user.name.charAt(0)}</h1>
                     }
                     
                     <UserContainer
@@ -76,7 +76,7 @@ const Header = () => {
                             data-testid="bag" 
                             className="icon-bag" 
                             aria-label="Ir al carrito"
-                            onClick={()=>navigate(`/cart/${username?.id}`)}>
+                            onClick={()=>navigate(`/cart/`)}>
                             <i className="fi fi-rs-shopping-bag"></i>
                         </div>
                     )

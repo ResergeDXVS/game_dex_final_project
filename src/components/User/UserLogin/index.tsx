@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { Fragment } from "react";
 import { UserContainerForm, UserCreateTitle, UserFormButtonSubmit, UserFormFeedback, UserFormFieldset, UserFormInput, UserFormLabel, UserFormLine } from "../styles";
-import { loginUserThunk } from "../../../redux/slices/userSlice";
+
 import { UserHeader, UserHeaderLogo } from "../../Header/HeaderMin/styles";
 import { useNavigate } from "react-router-dom";
 import Alert from "../../Alert";
 import { useAppDispatch } from "../../../redux/store/store";
+import { loginUser } from "../../../redux/slices/userSlice";
 
 export type LoginState = {
     email: string,
@@ -33,12 +34,12 @@ const UserLogin = () => {
             setSubmitted(true);
             return;
         }
-        const result = await dispatch(loginUserThunk(form));
-        if (loginUserThunk.fulfilled.match(result)) {
-            navigate("/");
-        }else{
-            setShowAlert(true);
+        const user = {
+            email: form.email,
+            password: form.password
         }
+        dispatch(loginUser(user) as any);
+        navigate("/");
     };
 
     

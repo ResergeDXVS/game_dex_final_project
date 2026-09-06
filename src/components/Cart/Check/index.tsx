@@ -11,7 +11,7 @@ const Check = () => {
     const carts = useAppSelector(state=>state.cart.carts);
     const address = useAppSelector(state=>state.addresses.address);
     const payments = useAppSelector(state=>state.payments.payment);
-    const actualCart = carts.find(cart=>cart.user_id === actualUser?.id && cart.product_ids.length>0 && cart.payment_id!==null );
+    const actualCart = carts[0];
     const addressSelected = address.find(add=> add.id === actualCart?.address_id);
     const methodSelected = payments.find(method=>method.id === actualCart?.payment_id);
     const navigate = useNavigate();

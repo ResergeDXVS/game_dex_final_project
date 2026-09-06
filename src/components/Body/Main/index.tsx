@@ -19,7 +19,7 @@ const Main = () => {
     },[dispatch]);
     
     const structure = () => {
-        console.log(list);
+
         return (
             <ProductList list={list}/>
         )

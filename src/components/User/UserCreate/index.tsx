@@ -9,7 +9,7 @@ import {
   UserFormLabel,
   UserFormLine,
 } from "../styles";
-import { createUserThunk } from "../../../redux/slices/userSlice";
+import { loginUser, postUser } from "../../../redux/slices/userSlice";
 import { UserHeader, UserHeaderLogo } from "../../Header/HeaderMin/styles";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../../redux/store/store";
@@ -41,33 +41,34 @@ const UserCreate = () => {
             password: "",
     });
 
-    const handleChange = (
-        e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-    ) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setForm((prev) => ({ ...prev, [name]: value }));
     };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-            e.preventDefault();
+        e.preventDefault();
+        if( !form.name ||
+            !form.paternal_surname ||
+            !form.rfc ||
+            !form.datebirth ||
+            !form.email ||
+            !form.password
+        ){
             setSubmitted(true);
-
-            const result = await dispatch(createUserThunk(form));
-            if (createUserThunk.fulfilled.match(result)) {
-                setForm({
-                    name: "",
-                    paternal_surname: "",
-                    maternal_surname: "",
-                    rfc: "",
-                    datebirth: "",
-                    email: "",
-                    password: "",
-                });
-
-                navigate("/");
-            } else {
-                setShowAlert(true);
-            }
+            return;
+        }
+        const user = {
+            name: form.name,
+            paternal_surname: form.paternal_surname,
+            maternal_surname: form.maternal_surname,
+            rfc: form.rfc,
+            datebirth: form.datebirth,
+            email: form.email,
+            password: form.password,
+        }
+        dispatch(postUser(user) as any);
+        navigate("/");
     };
 
     return (

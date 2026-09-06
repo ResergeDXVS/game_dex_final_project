@@ -5,22 +5,18 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 import { deleteItemCart, updateCart } from "../../redux/slices/cartSlice";
 const Cart = () => {
-    const param = useParams<{id:string}>();
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const carts = useAppSelector(state => state.cart.carts);
     const actualUser = useAppSelector(state=>state.user.actualUser);
-    const userCart = carts.find(cart => cart.user_id === Number(param.id));
-
+    const userCart = carts[0];
     const updateItem = (idItem:number,count:number) =>{
         if(count === 0){
             dispatch(deleteItemCart({
-                user:actualUser,
                 id:idItem,
             }))
-        }else{
+        } else {
             dispatch(updateCart({
-                user: actualUser,
                 id: idItem,
                 countItem: count
             }));
@@ -29,7 +25,6 @@ const Cart = () => {
 
     const deleteItem  = (idItem:number) =>{
         dispatch(deleteItemCart({
-            user:actualUser,
             id:idItem,
         }))
     }
@@ -97,7 +92,7 @@ const Cart = () => {
                         data-testid="go_to_pay_button"
                         onClick={()=>goPaymentMethod()}
                         aria-label="Botón para iniciar el proceso de pago">
-                        Pagar ${userCart?.total}
+                        Pagar ${userCart?.total ?? 0}
                     </button>
                 </CartPayment>
             </CartDecoration>
@@ -122,7 +117,7 @@ const Cart = () => {
 
     );
     const render = () =>{
-        if (!actualUser) return errorView();
+        if (!actualUser.user.id) return errorView();
         if (!userCart || !userCart.product_ids || userCart.product_ids.length===0) return emptyCart();
         else if (userCart.product_ids.length>0) return cartView();
 

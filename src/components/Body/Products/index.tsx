@@ -16,18 +16,18 @@ const Product = ({product}:ProductProps) =>{
     const navigate = useNavigate();
     const user = useAppSelector(state=>state.user.actualUser);
     const dispatch = useDispatch();
-    const addProduct = (product:Products) => {
-        if(user){
-            dispatch(addCart({user,product}));
-        }else{
+    const addProduct = (product: Products) => {
+        if (!product) return;
+        if (user) {
+            dispatch(addCart({ product }));
+        } else {
             setShowAlert(true);
-        }   
+        }
     };
 
     const checkDetails = (id:number) => {
         navigate(`/product/${id}`);
     }
-    console.log(product)
     return (
         <Fragment>
             <ProductData>
@@ -68,7 +68,7 @@ const Product = ({product}:ProductProps) =>{
                 </ProductContainer>
                 <ProductButton
                     aria-label="Agregar producto al carrito"
-                    onClick={()=>addProduct(product)}>
+                    onClick={()=>product && addProduct(product)}>
                         Guardar al carrito
                 </ProductButton>
             </ProductData>

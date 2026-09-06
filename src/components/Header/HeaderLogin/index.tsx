@@ -34,7 +34,7 @@ const HeaderLogin = () => {
     const closeSession = () => (
         <Fragment>
             <p>
-                Hola {actualUser?.name}
+                Hola {actualUser.user.name}
             </p>
             <LoginButton $login={true}
                 onClick={()=>closeSessionAction()}

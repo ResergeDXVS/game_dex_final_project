@@ -44,11 +44,9 @@ const PaymentMethod = () =>{
     const handlePay = () => {
         if (selectedCard && selectedAddress) {
             dispatch(addMethod({ 
-                user: actualUser, 
                 payment_id: selectedCard
             }));
             dispatch(addAddress({
-                user: actualUser, 
                 address_id: selectedAddress
             }))
 
