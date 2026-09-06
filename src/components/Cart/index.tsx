@@ -117,7 +117,7 @@ const Cart = () => {
 
     );
     const render = () =>{
-        if (!actualUser.user.id) return errorView();
+        if (!actualUser) return errorView();
         if (!userCart || !userCart.product_ids || userCart.product_ids.length===0) return emptyCart();
         else if (userCart.product_ids.length>0) return cartView();
 
