@@ -12,3 +12,6 @@ export const POST_ADDRESSES = 'address/PostAddresses';
 
 export const GET_CARDS = 'address/GetCards';
 export const POST_CARDS = 'address/PostCards';
+
+export const GET_BILLING = 'billing/GetBilling';
+export const POST_BILLING = 'billing/PostBilling';

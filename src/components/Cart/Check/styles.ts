@@ -213,7 +213,7 @@ const CheckProductDiscount = styled.p`
     width: 100%;
     font-family: ${props=>props.theme.fonts.secondary};
     grid-area: discount;
-    color:${props=> props.theme.colors.background};
+    color:${props=> props.theme.colors.marks};
     margin:0;
     text-align: start;
     font-size: ${PxToRem(24)};
@@ -230,7 +230,7 @@ const CheckProductNumber = styled.p`
     width: 100%;
     font-family: ${props=>props.theme.fonts.secondary};
     grid-area: number;
-    color:${props=> props.theme.colors.details};
+    color:${props=> props.theme.colors.marks};
     margin:0;
     text-align: start;
     font-size: ${PxToRem(24)};

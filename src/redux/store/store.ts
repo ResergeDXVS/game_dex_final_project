@@ -6,6 +6,7 @@ import dataReducer from "../slices/dataSlice";
 import cartReducer from "../slices/cartSlice";
 import paymentReducer from "../slices/paymentMethodSlice";
 import addressReducer from "../slices/addresssSlice";
+import billingReducer from "../slices/billingSlice";
 
 
 
@@ -18,6 +19,7 @@ export const store = configureStore({
         data:dataReducer,
         payments:paymentReducer,
         addresses:addressReducer,
+        billings:billingReducer,
     }
 });
 

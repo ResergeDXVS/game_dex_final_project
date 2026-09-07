@@ -10,6 +10,7 @@ import { addAddress, addMethod } from "../../../redux/slices/cartSlice";
 import AddressForm from "./AddressForm";
 import { GetAddresses } from "../../../redux/slices/addresssSlice";
 import { GetPaymentMethod } from "../../../redux/slices/paymentMethodSlice";
+import { PostBilling } from "../../../redux/slices/billingSlice";
 
 
 export type FormMethodState = {
@@ -30,7 +31,10 @@ export type AddressMethodState = {
 export type AddressItem = {
     id: number;
     address: string;
+    internal_number: string;
+    external_number: string;
     postal: string;
+    suburb: string;
     country: string;
 };
 
@@ -52,20 +56,43 @@ const PaymentMethod = () =>{
     const addresses = useAppSelector((state) => (state.addresses.address ?? [])) as unknown as AddressItem[];
     const actualUser = useAppSelector(state=>state.user.actualUser);
 
-    const handlePay = () => {
+    const handlePay = async () => {
         if (selectedCard && selectedAddress) {
-            dispatch(addMethod({ 
-                payment_id: selectedCard
-            }));
-            dispatch(addAddress({
-                address_id: selectedAddress
-            }))
+            const storageCarts = localStorage.getItem("storageCarts");
+            const carts = storageCarts ? JSON.parse(storageCarts) : [];
+            const userCart = carts[0];
 
-            navigate("/check/");
+            if (!userCart) {
+                setShowAlert(true);
+                return;
+            }
+
+            const orders = userCart.product_ids.map((item: any) => ({
+                product_id: item.product.id,
+                count: item.count,
+                total: item.count * (item.product.price * (1 - item.product.promotion / 100)),
+            }));
+
+            const billingPayload = {
+                account_id: actualUser.user.id,
+                address_id: selectedAddress,
+                payment_id: selectedCard,
+                total: userCart.total,
+                orders,
+            };
+            console.log(billingPayload)
+            const result = await dispatch(PostBilling(billingPayload as any) as any);
+
+            if ((PostBilling.fulfilled as any).match(result)) {
+                navigate("/check/");
+            } else {
+                setShowAlert(true);
+            }
         } else {
             setShowAlert(true);
         }
     };
+
     useEffect(()=>{
         const storedUser = actualUser;
         const token = storedUser?.access ?? "";
@@ -175,14 +202,14 @@ const PaymentMethod = () =>{
                 action={() => setShowAlertError(false)}
                 visible={showAlertError}/>
             <Alert
-                id="alert_check"
+                id="alert_product"
                 title={
                     !selectedCard ? "Tarjeta no seleccionada" : 
-                    !selectedAddress ? "Dirección no seleccionada" : ""
+                    !selectedAddress ? "Dirección no seleccionada" : "22"
                 } 
                 message={
                     !selectedCard ? "Debes seleccionar una tarjeta.":
-                    !selectedAddress ? "Debes seleccionar una dirección." : ""
+                    !selectedAddress ? "Debes seleccionar una dirección." : "22"
                 }
                 action={() => setShowAlert(false)}
                 visible={showAlert}/>
