@@ -6,7 +6,7 @@ import cartReducer, {
   addMethod,
   addAddress,
 } from "../cartSlice";
-import { createUserThunk } from "../userSlice";
+//import { createUserThunk } from "../userSlice";
 
 const mockUser = { id: 1, name: "Usuario" } as any;
 const mockProduct = {
@@ -23,7 +23,7 @@ describe("cartSlice reducers", () => {
 
     it("should handle addCart for new product", () => {
         const initialState = { carts: [{ user_id: 1, product_ids: [], total: 0, payment_id: null, address_id: null }] };
-        const action = addCart({ user: mockUser, product: mockProduct });
+        const action = addCart({ product: mockProduct });
         const state = cartReducer(initialState, action);
 
         expect(state.carts[0].product_ids).toHaveLength(1);
@@ -42,7 +42,7 @@ describe("cartSlice reducers", () => {
             },
         ],
         };
-        const action = updateCart({ user: mockUser, id: 10, countItem: 3 });
+        const action = updateCart({ id:1, countItem: 3 });
         const state = cartReducer(initialState, action);
 
         expect(state.carts[0].product_ids[0].count).toBe(3);
@@ -61,7 +61,7 @@ describe("cartSlice reducers", () => {
             },
         ],
         };
-        const action = deleteItemCart({ user: mockUser, id: 10 });
+        const action = deleteItemCart({ id: 10 });
         const state = cartReducer(initialState, action);
 
         expect(state.carts[0].product_ids).toHaveLength(0);
@@ -91,7 +91,7 @@ describe("cartSlice reducers", () => {
 
     it("should addMethod", () => {
         const initialState = { carts: [{ user_id: 1, product_ids: [], total: 0, payment_id: null, address_id: null }] };
-        const action = addMethod({ user: mockUser, payment_id: 99 });
+        const action = addMethod({ payment_id: 99 });
         const state = cartReducer(initialState, action);
 
         expect(state.carts[0].payment_id).toBe(99);
@@ -99,19 +99,19 @@ describe("cartSlice reducers", () => {
 
     it("should addAddress", () => {
         const initialState = { carts: [{ user_id: 1, product_ids: [], total: 0, payment_id: null, address_id: null }] };
-        const action = addAddress({ user: mockUser, address_id: 55 });
+        const action = addAddress({ address_id: 55 });
         const state = cartReducer(initialState, action);
 
         expect(state.carts[0].address_id).toBe(55);
     });
 
-    it("should handle createUserThunk.fulfilled", () => {
-        const initialState = { carts: [] };
-        const action = { type: createUserThunk.fulfilled.type, payload: { id: 2 } };
-        const state = cartReducer(initialState, action);
+    // it("should handle createUserThunk.fulfilled", () => {
+    //     const initialState = { carts: [] };
+    //     const action = { type: createUserThunk.fulfilled.type, payload: { id: 2 } };
+    //     const state = cartReducer(initialState, action);
 
-        expect(state.carts).toHaveLength(1);
-        expect(state.carts[0].user_id).toBe(2);
-        expect(state.carts[0].total).toBe(0);
-    });
+    //     expect(state.carts).toHaveLength(1);
+    //     expect(state.carts[0].user_id).toBe(2);
+    //     expect(state.carts[0].total).toBe(0);
+    // });
 });

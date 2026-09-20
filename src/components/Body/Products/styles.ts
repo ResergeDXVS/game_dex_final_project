@@ -90,7 +90,7 @@ const ProductDiscount = styled.h4`
 const ProductButton = styled.button`
     width: auto;
     background-color: ${props => props.theme.colors.marks};
-    color: ${props => props.theme.colors.white};
+    color: ${props => props.theme.colors.background};
     border: 1px solid ${props => props.theme.colors.marks};
     border-radius: 1.5rem;
     font-size: ${PxToRem(24)};

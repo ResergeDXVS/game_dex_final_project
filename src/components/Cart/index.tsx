@@ -5,22 +5,18 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 import { deleteItemCart, updateCart } from "../../redux/slices/cartSlice";
 const Cart = () => {
-    const param = useParams<{id:string}>();
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const carts = useAppSelector(state => state.cart.carts);
     const actualUser = useAppSelector(state=>state.user.actualUser);
-    const userCart = carts.find(cart => cart.user_id === Number(param.id));
-
+    const userCart = carts[0];
     const updateItem = (idItem:number,count:number) =>{
         if(count === 0){
             dispatch(deleteItemCart({
-                user:actualUser,
                 id:idItem,
             }))
-        }else{
+        } else {
             dispatch(updateCart({
-                user: actualUser,
                 id: idItem,
                 countItem: count
             }));
@@ -29,7 +25,6 @@ const Cart = () => {
 
     const deleteItem  = (idItem:number) =>{
         dispatch(deleteItemCart({
-            user:actualUser,
             id:idItem,
         }))
     }
@@ -49,15 +44,17 @@ const Cart = () => {
                             return(
                                 <CartProduct key={product.id}>
                                     <CartProductImage
-                                    alt={product.name}
-                                    src={product.image}/>
+                                    alt={`Imagen del producto ${product.name}`}
+                                    src={product.image_url}/>
                                     <CartProductName>
                                         {product.name}
                                     </CartProductName>
-                                    <CartProductOriginalPrice>
+                                    <CartProductOriginalPrice
+                                        aria-label="Precio original">
                                         ${product.price}
                                     </CartProductOriginalPrice>
                                     <CartProductDiscount
+                                         aria-label="Descuento actual"
                                         data-testid="product_promotion">
                                         {
                                             product.promotion >0 ?
@@ -74,13 +71,16 @@ const Cart = () => {
                                         max="100"
                                         value={count}
                                         onChange={(e)=>updateItem(product.id,Number(e.target.value))}
+                                        aria-label="Cantidad de productos"
                                     />
-                                    <CartProductTotal data-testid="product_total_price">
+                                    <CartProductTotal data-testid="product_total_price"
+                                        aria-label="Precio final de compra">
                                         ${(count*(product.price * (1-(product.promotion/100)))).toFixed(2)}
                                     </CartProductTotal>
                                     <CartDeleteButton
                                         data-testid="product_delete"
                                         className="fi fi-rs-trash cart__button"
+                                        aria-label="Eliminar producto del carrito"
                                         onClick={()=>deleteItem(product.id)}/>
                                 </CartProduct>
                             )
@@ -90,8 +90,9 @@ const Cart = () => {
                 <CartPayment>
                     <button
                         data-testid="go_to_pay_button"
-                        onClick={()=>goPaymentMethod()}>
-                        Pagar ${userCart?.total}
+                        onClick={()=>goPaymentMethod()}
+                        aria-label="Botón para iniciar el proceso de pago">
+                        Pagar ${userCart?.total ?? 0}
                     </button>
                 </CartPayment>
             </CartDecoration>
@@ -124,7 +125,8 @@ const Cart = () => {
     return(
         <Fragment>
             <UserHeader
-                onClick={()=>{navigate("/")}}>
+                onClick={()=>{navigate("/")}}
+                aria-label="Ir a la pantalla principal">
                 <UserHeaderLogo>
                     <img src="/img/GAME-DEX-LOGO.png"
                     alt="GAMES DEX"/>

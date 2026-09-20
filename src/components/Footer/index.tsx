@@ -8,22 +8,44 @@ const Footer = () => {
             <FooterInfo>
                 <FooterTitles>Adicional</FooterTitles>
                 <div>
-                    <button type="button">Sobre Nosotros</button>
-                    <button type="button">Facturación</button>
-                    <button type="button">Sucursales</button>
-                    <button type="button">Terminos y condiciones</button>
+                    <button 
+                        aria-label="Ir a la sección de Sobre Nosotros"
+                        type="button">
+                            Sobre Nosotros
+                    </button>
+                    <button 
+                        aria-label="Ir a la sección de Facturación"
+                        type="button">
+                            Facturación
+                    </button>
+                    <button 
+                        aria-label="Ir a la sección de Sucursales"
+                        type="button">
+                            Sucursales
+                    </button>
+                    <button 
+                        aria-label="Ir a la sección de Terminos y condiciones"
+                        type="button">
+                            Terminos y condiciones
+                    </button>
                 </div>
             </FooterInfo>
             <FooterNetworks>
                 <FooterTitles>Redes</FooterTitles>
                 <div>
-                    <button type="button">
+                    <button 
+                        type="button"
+                        aria-label="Ir a la página de Facebook">
                         <i className="fi fi-brands-facebook"/>
                     </button>
-                    <button type="button">
+                    <button 
+                        type="button"
+                        aria-label="Ir a la página de Instagram">
                         <i className="fi fi-brands-instagram"/>
                     </button>
-                    <button type="button">
+                    <button 
+                        type="button"
+                        aria-label="Ir a la página de Twitter">
                         <i className="fi fi-brands-twitter-alt"/>
                     </button>
                 </div>
@@ -40,7 +62,8 @@ const Footer = () => {
                 </div>
                 
             </FooterContacts>
-            <FooterCopyrights>
+            <FooterCopyrights
+                aria-label="Sección de Copyright">
                 <p>
                     &copy; 2026 GameDex. Todos los derechos reservados.
                 </p>

@@ -1,8 +1,8 @@
 import React, { Fragment, useState } from "react";
 import { MethodAddButton, MethodCancel, MethodDiv, MethodForm, MethodFormBase } from "./styles";
 import { FormMethodState } from "..";
-import { createPaymentThunk } from "../../../../redux/slices/paymentMethodSlice";
-import { useAppDispatch } from "../../../../redux/store/store";
+import { useAppDispatch, useAppSelector } from "../../../../redux/store/store";
+import { GetPaymentMethod, PostPaymentMethod } from "../../../../redux/slices/paymentMethodSlice";
 
 type PaymentMethodProps = {
     visible: boolean;
@@ -15,6 +15,7 @@ type PaymentMethodProps = {
 const CreditForm = ({ visible,onClose,onAlert }: PaymentMethodProps) => {
     
     const dispatch = useAppDispatch();
+    const actualUser = useAppSelector(state=>state.user.actualUser);
     const [form, setForm] = useState<FormMethodState>({
         card_number: "",
         expiration: "",
@@ -67,13 +68,21 @@ const CreditForm = ({ visible,onClose,onAlert }: PaymentMethodProps) => {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const result = await dispatch(createPaymentThunk(form));
-        if (createPaymentThunk.fulfilled.match(result)) {
+        const storedUser = actualUser;
+        const token = storedUser?.access ?? "";
+        const payment = {
+            card_number: form.card_number,
+            expiration: form.expiration,
+            cvc: form.cvc,
+        };
+        const result = await dispatch(PostPaymentMethod(payment as any));
+        dispatch(GetPaymentMethod(token) as any);
+        console.log(result);
+        if ((PostPaymentMethod.fulfilled as any).match(result)) {
             onClose();
-        } else if (createPaymentThunk.rejected.match(result)) {
+        } else if ((PostPaymentMethod.rejected as any).match(result)) {
             onAlert();
         }
-
     };
 
 
@@ -81,6 +90,8 @@ const CreditForm = ({ visible,onClose,onAlert }: PaymentMethodProps) => {
     return (
         <Fragment>
             <MethodFormBase 
+                id="creditAddModal"
+                role="dialog"
                 data-testid="form_credit"
                 className={ visible ? `form--show`:``}>
                 <MethodCancel
@@ -102,6 +113,7 @@ const CreditForm = ({ visible,onClose,onAlert }: PaymentMethodProps) => {
                             maxLength={16}
                             value={form.card_number}
                             onChange={handleChange}
+                            aria-label="Agregar los 16 números de tarjeta"
                         />
                         <p>Favor de agregar una tarjeta válida</p>
                     </MethodDiv>
@@ -117,6 +129,7 @@ const CreditForm = ({ visible,onClose,onAlert }: PaymentMethodProps) => {
                             maxLength={5}
                             value={form.expiration}
                             onChange={handleChange}
+                            aria-label="Agregar el número de expiración (MM/AA)"
                         />
                         <p>Favor de agregar una fecha valida</p>
                     </MethodDiv>
@@ -132,13 +145,15 @@ const CreditForm = ({ visible,onClose,onAlert }: PaymentMethodProps) => {
                             maxLength={3}
                             value={form.cvc}
                             onChange={handleChange}
+                            aria-label="Agregar los 3 dígitos de verificación"
                         />
                         <p>Favor de agregar 3 dígitos</p>
                     </MethodDiv>
 
                     <MethodAddButton 
                         data-testid="form_credit_submit"
-                        type="submit">
+                        type="submit"
+                        aria-label="Agregar datos de la nueva tarjeta">
                         <i className="fi fi-rs-plus"></i>
                         <p>Agregar</p>
                     </MethodAddButton>

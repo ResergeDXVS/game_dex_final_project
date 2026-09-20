@@ -33,7 +33,7 @@ const HeaderBase = styled.header`
     `)};
 `;
 
-const HeaderLogo = styled.div`
+const HeaderLogo = styled.section`
     grid-area: logo;
     display: flex;
     flex-direction: column;
@@ -59,7 +59,7 @@ const HeaderLogo = styled.div`
     
 `;
 
-const HeaderOptions = styled.div`
+const HeaderOptions = styled.section`
     grid-area: catalog;
     ${FlexboxStructure("row","center","center")};
     width: auto;
@@ -89,7 +89,7 @@ const HeaderOptions = styled.div`
     
 `;
 
-const HeaderIcons = styled.div`
+const HeaderIcons = styled.section`
     grid-area: icons;
     ${FlexboxStructure("row","flex-end","center")};
     width: auto;

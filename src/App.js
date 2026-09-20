@@ -33,7 +33,7 @@ function App() {
 						element={<ProductDetail/>}
 					/>
 					<Route
-						path="/cart/:id"
+						path="/cart/"
 						element={<Cart/>}
 					/>
 					<Route
@@ -45,7 +45,7 @@ function App() {
 						element={<Check/>}
 					/>
 					<Route
-						path="/products/"
+						path="/products/:category"
 						element={<ProductNavigate/>}
 					/>
 				</Routes>

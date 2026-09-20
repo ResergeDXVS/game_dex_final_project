@@ -15,8 +15,12 @@ const Alert = ({id,title,message,action,visible}:AlertProps) => {
     if (!visible) return null;
 
     return(
-        <AlertContainer id={id} className="alert alert--show">
-            <AlertTitle>
+        <AlertContainer 
+            id={id} 
+            className="alert alert--show"
+            aria-labelledby="alertModalTitle">
+            <AlertTitle
+                id="alertModalTitle">
                 {title}
             </AlertTitle>
             <AlertMessage>
@@ -24,6 +28,7 @@ const Alert = ({id,title,message,action,visible}:AlertProps) => {
             </AlertMessage>
             <AlertButton
                 data-testid="alert_button"
+                aria-label="Botón para cerrar la ventana de alerta"
                 onClick={action}>
                 Entendido
             </AlertButton>

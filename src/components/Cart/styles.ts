@@ -29,7 +29,8 @@ const CartDecoration = styled.section`
     width: 100%;
     min-height: 60vh;
     border-radius: 1.5rem;
-    background-color: ${props=>props.theme.colors.gray};
+    background-color: ${props=>props.theme.colors.white};
+    border: 2px solid ${p=>p.theme.colors.background};
     padding: 2rem;
     font-family: ${props=>props.theme.fonts.primary};
 `;
@@ -39,7 +40,7 @@ const CartTitle = styled.h1`
     font-weight: 700;
     font-family: inherit;
     color:${props=>props.theme.colors.buttons};
-    width: 100%;
+    width: auto;
     margin: 1rem 3rem .75rem 3rem;
     border-bottom: 1px solid ${props=>props.theme.colors.white};
     text-transform: uppercase;
@@ -48,7 +49,7 @@ const CartTitle = styled.h1`
         font-size: ${PxToRem(36)};
     `)};
     ${phoneAdjustments(css`
-        font-size: ${PxToRem(32)};
+        font-size: ${PxToRem(28)};
     `)};
 `;
 
@@ -120,6 +121,7 @@ const CartProductName = styled.p`
     overflow: hidden;
     text-overflow: ellipsis;
     font-size: ${PxToRem(28)};
+    font-weight: 700;
     margin-left:.75rem;
     ${mediaAdjustments(css`
         font-size: ${PxToRem(24)};
@@ -138,15 +140,15 @@ const CartProductOriginalPrice = styled.p`
     color:${props=> props.theme.colors.details};
     margin:0;
     text-align: center;
-    font-size: ${PxToRem(20)};
+    font-size: ${PxToRem(28)};
     margin-left:.75rem;
     ${mediaAdjustments(css`
         text-align: left;
-        font-size: ${PxToRem(16)};
+        font-size: ${PxToRem(24)};
     `)};
     ${phoneAdjustments(css`
         text-align: left;
-        font-size: ${PxToRem(16)};
+        font-size: ${PxToRem(20)};
     `)};
 `;
 
@@ -154,71 +156,72 @@ const CartProductDiscount = styled.p`
     width: 100%;
     font-family: ${props=>props.theme.fonts.secondary};
     grid-area: discount;
-    color:${props=> props.theme.colors.marks};
+    color:${props=> props.theme.colors.buttons};
     margin:0;
     text-align: start;
-    font-size: ${PxToRem(20)};
-    ${mediaAdjustments(css`
-        text-align: right;
-        font-size: ${PxToRem(16)};
-    `)};
-    ${phoneAdjustments(css`
-        text-align: right;
-        font-size: ${PxToRem(16)};
-    `)};
-`;
-
-const CartProductNumber = styled.input`
-    grid-area: number;
-    font-family: ${props=>props.theme.fonts.secondary};
-    color: ${props=> props.theme.colors.details};
-    text-align: center;
-    width: 100%;
-    margin: 0px 8px;
-    padding: 0.5rem;
-    background-color: ${props=> props.theme.colors.gray};
-    border: 1px solid ${props=> props.theme.colors.white};
-    border-radius: .5rem;
-    font-size: ${PxToRem(20)};
-    ${mediaAdjustments(css`
-        width: auto;
-        margin: 0px 8px;
-        padding: 0.5rem;
-        align-self: center;
-        font-size: ${PxToRem(16)};
-    `)};
-    ${phoneAdjustments(css`
-        width:auto;
-        margin: 0px 4px;
-        padding: 0.25rem;
-        align-self: center;
-        font-size: ${PxToRem(16)};
-    `)};
-`;
-
-const CartProductTotal = styled.p`
-    grid-area: total;
-    font-family: ${props=>props.theme.fonts.secondary};
-    color:${props=> props.theme.colors.white};
-    margin:0;
-    text-align: right;
-    font-weight: 700;
     font-size: ${PxToRem(28)};
     ${mediaAdjustments(css`
         text-align: right;
         font-size: ${PxToRem(24)};
     `)};
     ${phoneAdjustments(css`
-        text-align: center;
+        text-align: right;
         font-size: ${PxToRem(20)};
+    `)};
+`;
+
+const CartProductNumber = styled.input`
+    grid-area: number;
+    font-family: ${props=>props.theme.fonts.secondary};
+    color: ${props=> props.theme.colors.background};
+    text-align: center;
+    width: 100%;
+    margin: 0px 8px;
+    padding: 0.5rem;
+    background-color: ${props=> props.theme.colors.white};
+    border: 2px solid ${props=> props.theme.colors.background};
+    border-radius: .5rem;
+    font-size: ${PxToRem(24)};
+    font-weight: 700;
+    ${mediaAdjustments(css`
+        width: auto;
+        margin: 0px 8px;
+        padding: 0.5rem;
+        align-self: center;
+        font-size: ${PxToRem(22)};
+    `)};
+    ${phoneAdjustments(css`
+        width:auto;
+        margin: 0px 4px;
+        padding: 0.25rem;
+        align-self: center;
+        font-size: ${PxToRem(20)};
+    `)};
+`;
+
+const CartProductTotal = styled.p`
+    grid-area: total;
+    font-family: ${props=>props.theme.fonts.secondary};
+    color:${props=> props.theme.colors.buttons};
+    margin:0;
+    text-align: right;
+    font-weight: 700;
+    font-size: ${PxToRem(32)};
+    ${mediaAdjustments(css`
+        text-align: right;
+        font-size: ${PxToRem(28)};
+    `)};
+    ${phoneAdjustments(css`
+        text-align: center;
+        font-size: ${PxToRem(24)};
     `)};
 `;
 
 const CartDeleteButton = styled.i`
     grid-area:delete;
     cursor: pointer;
-    color: ${props=> props.theme.colors.white};
-    font-size: ${PxToRem(32)};
+    color: ${props=> props.theme.colors.buttons};
+    font-size: ${PxToRem(36)};
     line-height: 1;
     text-align: center;
     display: inline-block;
@@ -232,7 +235,7 @@ const CartPayment = styled.div`
     box-sizing: border-box;
     button{
         width: 50%;
-        color:${props=> props.theme.colors.white};
+        color:${props=> props.theme.colors.background};
         border: 1px solid ${props=> props.theme.colors.marks};
         background-color:${props=> props.theme.colors.marks};
         box-sizing: border-box;

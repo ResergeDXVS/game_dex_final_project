@@ -116,7 +116,7 @@ describe("Check component",()=>{
                         external_number:"1",
                         postal:"12000",
                         suburb:"Tlalpan",
-                        contry:"México",
+                        country:"México",
                     }
                 ]
             }
@@ -203,7 +203,7 @@ describe("Check component",()=>{
                         external_number:"1",
                         postal:"12000",
                         suburb:"Tlalpan",
-                        contry:"México",
+                        country:"México",
                     }
                 ]
             }
@@ -281,7 +281,7 @@ describe("Check component",()=>{
                         external_number:"1",
                         postal:"12000",
                         suburb:"Tlalpan",
-                        contry:"México",
+                        country:"México",
                     }
                 ]
             }

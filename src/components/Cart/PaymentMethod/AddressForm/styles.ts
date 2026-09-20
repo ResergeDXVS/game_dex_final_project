@@ -98,6 +98,9 @@ const AddressDiv = styled.div<{$grid_name:string,$show_data:boolean | null}>`
             `inline-block`
         };
         color: ${p=>p.theme.colors.buttons};
+        font-size:${PxToRem(20)};
+        font-weight:700;
+        margin:0;
 
     }
 `;
@@ -112,7 +115,7 @@ const AddressAddButton = styled.button`
     width: auto;
     height: 50%;
     gap: .75rem;
-    font-size: ${PxToRem(20)};  
+    font-size: ${PxToRem(28)};  
     transition: ${p=>p.theme.buttons.transition};
     cursor: pointer;
     &:hover{
@@ -121,10 +124,10 @@ const AddressAddButton = styled.button`
     }
     
     ${mediaAdjustments(css`
-        font-size: ${PxToRem(16)};
+        font-size: ${PxToRem(24)};
     `)};
     ${phoneAdjustments(css`
-        font-size: ${PxToRem(12)};
+        font-size: ${PxToRem(20)};
     `)};
     i{
         font-size:inherit;
@@ -160,7 +163,7 @@ const AddressCancel = styled.div`
         text-align: right;
         line-height: 1;
         margin: 0;
-        font-weight: 700;
+        font-weight: 900;
         ${mediaAdjustments(css`
             font-size: ${PxToRem(24)};
         `)};

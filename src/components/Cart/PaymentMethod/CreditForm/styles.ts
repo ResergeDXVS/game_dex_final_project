@@ -91,8 +91,9 @@ const MethodDiv = styled.div<{$grid_name:string,$show_data:boolean | null}>`
             ($show_data ===null || $show_data===true) ? `none` : 
             `inline-block`
         };
-        color: ${p=>p.theme.colors.buttons};
-
+        color: ${p=>p.theme.colors.background};
+        font-weight:500;
+        
     }
 `;
 
@@ -107,7 +108,7 @@ const MethodAddButton = styled.button`
     width: auto;
     height: 50%;
     gap: .75rem;
-    font-size: ${PxToRem(20)};  
+    font-size: ${PxToRem(28)};  
     transition: ${p=>p.theme.buttons.transition};
     cursor: pointer;
     &:hover{
@@ -115,10 +116,10 @@ const MethodAddButton = styled.button`
         filter: ${p=>p.theme.buttons.bright};
     }
     ${mediaAdjustments(css`
-        font-size: ${PxToRem(16)};
+        font-size: ${PxToRem(24)};
     `)};
     ${phoneAdjustments(css`
-        font-size: ${PxToRem(12)};
+        font-size: ${PxToRem(20)};
     `)};
     i{
         font-size: inherit;  
@@ -154,7 +155,7 @@ const MethodCancel = styled.div`
         text-align: right;
         line-height: 1;
         margin: 0;
-        font-weight: 700;
+        font-weight: 900;
         ${mediaAdjustments(css`
             font-size: ${PxToRem(24)};
         `)};

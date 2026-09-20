@@ -113,7 +113,7 @@ const PaymentMethodPayment = styled.div`
     box-sizing: border-box;
     button{
         width: 50%;
-        color:${props=> props.theme.colors.white};
+        color:${props=> props.theme.colors.background};
         border: 1px solid ${props=> props.theme.colors.marks};
         background-color:${props=> props.theme.colors.marks};
         box-sizing: border-box;

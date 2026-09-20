@@ -1,46 +1,73 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import Header from "../../Header";
 import Footer from "../../Footer";
 import Carousel from "../Carousel";
 import Companies from "../Companies";
 import { useAppSelector } from "../../../redux/store/store";
 import { ProductTitles } from "./styles";
-import { Products } from "../../../redux/slices/productSlice";
+import { getProductListMain } from "../../../redux/slices/productSlice";
 import ProductList from "../Products/ProductList";
+import { useDispatch } from "react-redux";
+import { ASYNC_STATUS } from "../../../constants/asyncState";
+import { InformationMsg } from "../Companies/styles";
+import { Circles } from "react-loader-spinner";
+import Theme from "../../../theme";
 
 const Main = () => {
-    const products = useAppSelector(state=>state.product.products);
-    let auxList:number[] = [];
+    const {list, status } = useAppSelector(state=>state.product);
+    const dispatch = useDispatch();
+    useEffect(()=>{
+        dispatch(getProductListMain() as any);
+        
+    },[dispatch]);
+    
+    const structure = () => {
 
-    function getRandomInt(min:number, max:number) {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-    const generateList = () => {
-        const productList: Products[] = [];
-        while(auxList.length<8){
-            let index = getRandomInt(0,products.length-1);
-            if (!auxList.includes(index)) auxList.push(index);
-        }
-        for(let aux of auxList){
-            productList.push(products[aux]);
-        }
-        return productList;
+        return (
+            <ProductList list={list}/>
+        )
     }
 
-    
+    const errors = () => (
+        <InformationMsg>
+            <p>Error en la carga de datos</p>
+        </InformationMsg>
+    )
+    const charging = () => (
+        <InformationMsg>
+            <div>
+                <h3>Cargando...</h3>
+            </div>
+            <Circles
+                height="80"
+                width="80"
+                color={Theme.colors.details}
+                ariaLabel="circles-loading"
+                wrapperStyle={{}}
+                wrapperClass=""
+                visible={true}
+            /> 
+        </InformationMsg>
+        
+    )
 
+    const render = () => {
+        if (status === ASYNC_STATUS.PENDING ){
+            return charging();
+        }else if(status === ASYNC_STATUS.REJECTED){
+            return errors();
+        }else{
+            return structure();
+        }
+    }
     
-
     return(
         <Fragment>
             <Header/>
                 <Carousel/>
                 <Companies/>
                 <ProductTitles>Alguno de nuestros productos</ProductTitles>
-                {
-                    <ProductList
-                        list={generateList()}/>
-                }
+                {render()}
             <Footer/>
         </Fragment>
     );

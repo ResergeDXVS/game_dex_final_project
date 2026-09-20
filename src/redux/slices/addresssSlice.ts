@@ -1,6 +1,9 @@
 import {  createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { AddressMethodState } from "../../components/Cart/PaymentMethod";
+import { AddressItem, AddressMethodState } from "../../components/Cart/PaymentMethod";
 import { User } from "./userSlice";
+import { GET_ADDRESSES, POST_ADDRESSES } from "../../constants/actionTypes";
+import api from "../../api";
+import { ASYNC_STATUS } from "../../constants/asyncState";
 
 
 export type address = {
@@ -11,7 +14,7 @@ export type address = {
     external_number:string,
     postal:string,
     suburb:string,
-    contry:string,
+    country:string,
 
 };
 
@@ -21,82 +24,88 @@ export interface AddressState {
     error: string | null;
 }
 
-export const createAddressThunk = createAsyncThunk<
-    address,
-    AddressMethodState,
-    {
-        state: {
-            addresses: AddressState;
-            user: { actualUser: User | null };
-        };
-        rejectValue: string;
-    }
-    >(
-    "address/createAddressThunk",
-    async (form, { getState, rejectWithValue }) => {
-
-        const state = getState();
-        const actualUser = state.user.actualUser;
-
-        if (!actualUser) {
-        return rejectWithValue("No se ha iniciado sesión.");
-        }
-
-        const exist = state.addresses.address.some(
-        (u) =>
-            u.address === form.address &&
-            u.user_id === actualUser.id
-        );
-
-        if (exist) {
-            return rejectWithValue("La dirección ya está registrada por el usuario");
-        }
-        if( form.address === "" || form.contry==="" || form.external_number ==="" || form.postal === "" || form.suburb===""){
-            return rejectWithValue("La dirección se encuentra incompleta");
-        }
-
-        const idAux = state.addresses.address.length + 1;
-
-        const newAddress: address = {
-            id:idAux,
-            user_id:actualUser.id,
-            address:form.address,
-            internal_number:form.internal_number,
-            external_number:form.external_number,
-            postal:form.postal,
-            suburb:form.suburb,
-            contry:form.contry,
-        };
-
-        return newAddress;
+export const GetAddresses = createAsyncThunk(
+    GET_ADDRESSES,
+    async (token: string) => {
+        const response = await api.get(`accounts/address/`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        const data = response.data;
+        return Array.isArray(data) ? data : [data];
     }
 );
 
 
-const initialState: AddressState = {
-    address: [],
-    status: "idle",
-    error: null,
-};
+export const PostAddresses = createAsyncThunk(
+    POST_ADDRESSES,
+    async (address:address) => {
+        const storedUser = localStorage.getItem("actualUser");
+        const parsedUser = storedUser
+            ? (JSON.parse(storedUser) as User & { access?: string })
+            : null;
+
+        if (!parsedUser) {
+            throw new Error("No se ha iniciado sesión.");
+        }
+
+        const token = parsedUser.access;
+        const response = await api.post(`accounts/address/`, 
+            {
+                account_id: parsedUser.id,
+                address:address.address,
+                internal_number:address.internal_number,
+                external_number:address.external_number,
+                postal:address.postal,
+                suburb:address.suburb,
+                country:address.country,
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        return response.data;
+    }
+);
+
 
 const addressSlice = createSlice({
     name: "address",
-    initialState,
+    initialState:{
+        address: [] as AddressItem[],
+        status: "idle",
+        error:null as null|string,
+    },
     reducers: {},
     extraReducers: builder => {
         builder
-        .addCase(createAddressThunk.pending, state => {
-            state.status = "loading";
+        .addCase(GetAddresses.pending, state => {
+            state.status = ASYNC_STATUS.PENDING;
             state.error = null;
         })
-        .addCase(createAddressThunk.fulfilled, (state, action) => {
-            state.status = "succeeded";
-            state.address = [...state.address, action.payload];
+        .addCase(GetAddresses.fulfilled, (state, action) => {
+            state.status = ASYNC_STATUS.FULFILLED;
+            state.address = action.payload;
         })
-        .addCase(createAddressThunk.rejected, (state, action) => {
-            state.status = "failed";
-            state.error = action.payload as string;
-        });
+        .addCase(GetAddresses.rejected, (state, action) => {
+            state.status = ASYNC_STATUS.PENDING;
+            state.error = action.error as string;
+        })
+        .addCase(PostAddresses.pending, state => {
+            state.status = ASYNC_STATUS.PENDING;
+            state.error = null;
+        })
+        .addCase(PostAddresses.fulfilled, (state, action) => {
+            state.status = ASYNC_STATUS.FULFILLED;
+            state.address.push(action.payload);
+        })
+        .addCase(PostAddresses.rejected, (state, action) => {
+            state.status = ASYNC_STATUS.PENDING;
+            state.error = action.error as string;
+        })
     },
     
 });
