@@ -1,9 +1,11 @@
 import React, { useEffect } from "react";
 import { useAppSelector } from "../../../redux/store/store";
-import { CompaniesGrid, CompanyElement } from "./styles";
+import { CompaniesGrid, InformationMsg, CompanyElement } from "./styles";
 import { ASYNC_STATUS } from "../../../constants/asyncState";
 import { getCompanyList } from "../../../redux/slices/dataSlice";
 import { useDispatch } from "react-redux";
+import { Circles } from "react-loader-spinner";
+import Theme from "../../../theme";
 const Companies = () => {
     const {companies,status} = useAppSelector(state=>state.data);
     const dispatch = useDispatch();
@@ -12,10 +14,26 @@ const Companies = () => {
     },[dispatch]);
 
     const errors = () => (
-        <p>Error en la búsqueda</p>
+        <InformationMsg>
+            <p>Error en la carga de datos</p>
+        </InformationMsg>
     )
     const charging = () => (
-        <p>Cargando</p>
+        <InformationMsg>
+            <div>
+                <h3>Cargando...</h3>
+            </div>
+            <Circles
+                height="80"
+                width="80"
+                color={Theme.colors.details}
+                ariaLabel="circles-loading"
+                wrapperStyle={{}}
+                wrapperClass=""
+                visible={true}
+            />
+        </InformationMsg>
+        
     )
     const structure = () => (
         <CompaniesGrid

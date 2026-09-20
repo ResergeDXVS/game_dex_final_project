@@ -40,7 +40,7 @@ const CartTitle = styled.h1`
     font-weight: 700;
     font-family: inherit;
     color:${props=>props.theme.colors.buttons};
-    width: 100%;
+    width: auto;
     margin: 1rem 3rem .75rem 3rem;
     border-bottom: 1px solid ${props=>props.theme.colors.white};
     text-transform: uppercase;
@@ -49,7 +49,7 @@ const CartTitle = styled.h1`
         font-size: ${PxToRem(36)};
     `)};
     ${phoneAdjustments(css`
-        font-size: ${PxToRem(32)};
+        font-size: ${PxToRem(28)};
     `)};
 `;
 

@@ -1,5 +1,18 @@
 import styled from "styled-components";
 
+const InformationMsg = styled.section`
+    width: auto;
+    height: auto;
+    margin: 1.75rem 2.75rem;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap:2rem;
+
+`;
+
 const CompaniesGrid = styled.section`
     width: auto;
     height: auto;
@@ -31,6 +44,7 @@ const CompanyElement = styled.div`
 `;
 
 export {
+    InformationMsg,
     CompaniesGrid,
     CompanyElement
 }

@@ -9,6 +9,9 @@ import { getProductListMain } from "../../../redux/slices/productSlice";
 import ProductList from "../Products/ProductList";
 import { useDispatch } from "react-redux";
 import { ASYNC_STATUS } from "../../../constants/asyncState";
+import { InformationMsg } from "../Companies/styles";
+import { Circles } from "react-loader-spinner";
+import Theme from "../../../theme";
 
 const Main = () => {
     const {list, status } = useAppSelector(state=>state.product);
@@ -26,10 +29,26 @@ const Main = () => {
     }
 
     const errors = () => (
-        <p>Error en la búsqueda</p>
+        <InformationMsg>
+            <p>Error en la carga de datos</p>
+        </InformationMsg>
     )
     const charging = () => (
-        <p>Cargando</p>
+        <InformationMsg>
+            <div>
+                <h3>Cargando...</h3>
+            </div>
+            <Circles
+                height="80"
+                width="80"
+                color={Theme.colors.details}
+                ariaLabel="circles-loading"
+                wrapperStyle={{}}
+                wrapperClass=""
+                visible={true}
+            /> 
+        </InformationMsg>
+        
     )
 
     const render = () => {

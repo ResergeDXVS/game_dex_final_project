@@ -8,6 +8,8 @@ import { ProductNavigateTitle, ProductNavigateContainer, ProductNavigateErrorCon
 import Header from "../../../Header";
 import { useDispatch } from "react-redux";
 import { ASYNC_STATUS } from "../../../../constants/asyncState";
+import { Circles } from "react-loader-spinner";
+import Theme from "../../../../theme";
 
 function useQuery() {
     return new URLSearchParams(useLocation().search);
@@ -42,6 +44,15 @@ const ProductNavigate = () => {
         <ProductNavigateErrorContainer aria-labelledby="productNavigateModalError">
             <ProductNavigateError
                 id="productNavigateModalError">CARGANDO...</ProductNavigateError>
+                <Circles
+                    height="80"
+                    width="80"
+                    color={Theme.colors.details}
+                    ariaLabel="circles-loading"
+                    wrapperStyle={{}}
+                    wrapperClass=""
+                    visible={true}
+                />
         </ProductNavigateErrorContainer>
     );
 
