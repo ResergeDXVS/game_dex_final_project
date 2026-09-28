@@ -1,70 +1,42 @@
-# Getting Started with Create React App
+# 🎮 Game Dex
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 📖 Description
+Game Dex is a final project for the FrontEnd Development program: an e-commerce web application for browsing and purchasing video games. It was built as a single-page application (SPA) with React and TypeScript, consuming external data through HTTP requests and managing application state with Redux Toolkit.
 
-## Available Scripts
+## 🛠️ Technologies used
+- **Main language:** TypeScript / JavaScript
+- **Frameworks & libraries:** React 19, React Router DOM, Redux Toolkit, React Redux
+- **UI / Styling:** Bootstrap 5, styled-components, Flaticon UIcons, react-loader-spinner
+- **HTTP client:** Axios
+- **Testing:** Jest, React Testing Library
+- **Build tooling:** Create React App (react-scripts)
 
-In the project directory, you can run:
+## 📂 Project structure
+- `public/` — Static assets and the base HTML template
+- `src/` — Application source code (components, views, Redux store, services)
+- `package.json` — Dependencies and available scripts
 
-### `npm start`
+## 🚀 Getting started
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Prerequisites
+- Node.js and npm installed
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Installation
+```bash
+git clone https://github.com/ResergeDXVS/game_dex_final_project.git
+cd game_dex_final_project
+npm install
+```
 
-### `npm test`
+### Available scripts
+- `npm start` — Runs the app in development mode at [http://localhost:3000](http://localhost:3000)
+- `npm test` — Launches the test runner in interactive watch mode
+- `npm run test:coverage` — Runs the tests and generates a coverage report
+- `npm run build` — Builds the app for production into the `build` folder
+- `npm run eject` — Ejects the Create React App configuration (one-way operation)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 📌 Status
+Final project delivered for the Fullstack Development – E-commerce course, Front End.
 
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## 👤 Author
+[ResergeDXVS](https://github.com/ResergeDXVS)
