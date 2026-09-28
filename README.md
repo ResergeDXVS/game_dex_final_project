@@ -1,4 +1,4 @@
-# 🎮 Game Dex
+# 🎮 Game Dex - Frontend
 
 ## 📖 Description
 Game Dex is a final project for the FrontEnd Development program: an e-commerce web application for browsing and purchasing video games. It was built as a single-page application (SPA) with React and TypeScript, consuming external data through HTTP requests and managing application state with Redux Toolkit.
